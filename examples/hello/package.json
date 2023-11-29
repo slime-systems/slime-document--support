@@ -1,0 +1,35 @@
+{
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "eslintConfig": {
+    "extends": [
+      "eslint:recommended"
+    ],
+    "parserOptions": {
+      "sourceType": "module",
+      "ecmaVersion": "latest"
+    },
+    "rules": {
+      "quotes": [
+        1,
+        "single"
+      ],
+      "semi": [
+        1,
+        "always"
+      ],
+      "comma-dangle": [
+        1,
+        "always-multiline"
+      ],
+      "no-undef": "off"
+    }
+  },
+  "dependencies": {
+    "axios": "^1.6.2",
+    "jose": "^5.1.2"
+  }
+}
