@@ -15,7 +15,7 @@ Resemble the following example:
 }
 ~~~
 
-Please refer to [the guide](../guides#understand-the-authentication) to understand the format of encoded request payloads.
+Please refer to [the guide](./guides.md#understand-the-authentication) to understand the format of encoded request payloads.
 
 ## API Response Format
 
@@ -62,7 +62,7 @@ An exception code is always available in an exception response.
 
 ## API Authentication
 
-If you are looking for explanations, please refer to [the guide](../guides#understand-the-authentication) which covers the topic.
+If you are looking for explanations, please refer to [the guide](./guides.md#understand-the-authentication) which covers the topic.
 The info in this document is more of a reference than a guide.
 
 <details>
