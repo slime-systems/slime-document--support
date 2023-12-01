@@ -104,7 +104,7 @@ because of [the support of communities of many programming languages](https://jw
 Encoding the command into a payload is as simple as picking your preferred JWT library and passing in the parameters.
 
 In the example, we want to call the "hello" command passing name as the only parameter.
-By reading the API document, you will find out that the "hello" command corresponds to the "test/hello" API subject;
+By [reading the API document](./api.md#test-hello), you will find out that the "hello" command corresponds to the "test/hello" API subject;
 the command accepts the `name` parameter.
 We then start constructing our payload with `sub` and `data` claims as shown.
 
