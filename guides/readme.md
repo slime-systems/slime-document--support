@@ -78,7 +78,7 @@ Congrats you are now successfully authenticated with the API.
 
 ## Understand the Authentication
 
-You have to understand what happened in the example in order to authenticate it your way with your language of choice.
+You have to understand what happened in the example in order to implement the authentication in your way with your language of choice.
 There is not much to be learned, actually.
 
 ### High-level overview
