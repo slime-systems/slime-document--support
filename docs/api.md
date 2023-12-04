@@ -285,3 +285,118 @@ We are positive that we will have a good solution for you.
  Theme::UnsupportedLanguage     | <N/A>                                                                                                                                                     
 
 </details>
+
+## Trading Transaction API
+
+APIs for a trading transaction in generals
+
+### Trading Transaction: Show
+
+Show transaction info by `transaction_id`.
+
+<details>
+  <summary>example payload</summary>
+
+~~~json
+{
+  "sub": "trading-transaction/show",
+  "data": {
+    "transaction_id": "TEST-TRANSACTION-0001",
+    "include_documents": "latest"
+  }
+}
+~~~
+
+</details>
+
+<details>
+  <summary>example response</summary>
+
+~~~json
+{
+  "data": {
+    "id": "TEST-TRANSACTION-0001",
+    "initiated_at": "2023-11-20T11:38:57Z",
+    "trade_value": "90.0",
+    "tags": [],
+    "system_tags": [
+      "NIDN:1234567851234"
+    ],
+    "storage_used": 120171,
+    "documents": [
+      {
+        "id": "TEST-TRANSACTION-0001D1",
+        "sequence": 1,
+        "ref": "1",
+        "ready": true,
+        "xml_size": 12942,
+        "pdf_size": 107229
+      }
+    ]
+  }
+}
+~~~
+
+</details>
+
+
+<details>
+  <summary>parameters</summary>
+
+ Name              | Type           | Required | Remarks                                                                                                                                                                                                                                                                                                                                       
+ -------------------|----------------|----------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ transaction_id    | String         | true     | <N/A>                                                                                                                                                                                                                                                                                                                                         
+ include_documents | Enum\<String\> | false    | __"latest"__: include the latest document of the transactions; __"readied"__: include documents readied to be view or download; __"all"__: include all documents of the transaction; __Omit the parameter__ if you don't want to include data about the documents, which will save you some bandwidth and having slightly better performance. 
+
+</details>
+
+### Trading Transaction: Set Tags
+
+Set tags on the transaction so it can be filtered.
+
+Alternatively:
+
+* Tags can be set on the transaction initiation which should be preferred than setting it afterward.
+* Don't use tags at all, customize and manage everything yourself and associate with us through `transaction_id`.
+
+API Subject: `trading-transaction/set-tags`
+<details>
+  <summary>example payload</summary>
+
+~~~json
+{
+  "sub": "trading-transaction/set-tags",
+  "data": {
+    "transaction_id": "TEST-TRANSACTION-0001",
+    "tags": [
+      "order_id:314159",
+      "customer_id:265358"
+    ]
+  }
+}
+~~~
+
+</details>
+
+<details>
+  <summary>example response</summary>
+
+~~~json
+{
+  "data": {
+    "success": true
+  }
+}
+~~~
+
+</details>
+
+<details>
+  <summary>parameters</summary>
+
+ Name           | Type            | Required | Remarks                                                     
+ ----------------|-----------------|----------|-------------------------------------------------------------
+ transaction_id | String          | true     | <N/A>                                                       
+ tags           | Array\<String\> | true     | __maximum array length:__ 2; __maximum string length:__ 255 
+
+</details>
