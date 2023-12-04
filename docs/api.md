@@ -55,7 +55,7 @@ example.
 
 Unless otherwise specified, the value of the __"exception"__ should be a JSON object.
 The __"code"__ is an exception code that conveys the meaning to humans and machines alike;
-it is suitable for program consumption.  
+it is suitable for programming consumption.  
 We won't make a change to exception codes for aesthetic reasons.
 
 Sometimes, the exception will be accompanied by __"message"__ to help developers pinpoint the issue.
@@ -78,7 +78,7 @@ The info in this document is more of a reference than a guide.
  JWT::IATDrift          | The `iat` claim in the JWT drifts beyond the acceptable period. The token may be stale, or the clock on the system used to generate the token is unusable.  
  JWT::InvalidSubject    | Unrecognized `API subject` specified.                                                                                                                       
  JWT::VerificationError | Mainly invalid signature; please check: the secret key and API endpoint.                                                                                    
- JWT::DecodeError       | General JWT docode isuues; this exception code shoud accompanied with a useful message for debugging.                                                       
+ JWT::DecodeError       | General JWT decode issues; this exception code shoud accompanied with a useful message for debugging.                                                       
  JWT::SchemaViolation   | Some of the fields is not conformed to agreed format at the JWT level.                                                                                      
 
 </details>
@@ -354,10 +354,13 @@ Show transaction info by `transaction_id`.
 
 Set tags on the transaction so it can be filtered.
 
-Alternatively:
+Alternatives:
 
 * Tags can be set on the transaction initiation which should be preferred than setting it afterward.
 * Don't use tags at all, customize and manage everything yourself and associate with us through `transaction_id`.
+
+See also:
+* [List by Tag](#trading-transaction-list-by-tag)
 
 API Subject: `trading-transaction/set-tags`
 <details>
@@ -400,3 +403,92 @@ API Subject: `trading-transaction/set-tags`
  tags           | Array\<String\> | true     | __maximum array length:__ 2; __maximum string length:__ 255 
 
 </details>
+
+### Trading Transaction: List By Tag
+
+List transactions by a tag.  
+The tag used for filtering can be a user-supplied tag or a system tag.
+
+Limitation:
+
+* You can only filter using a single tag.
+* The response is limited to 1,000 transactions; which should suffice for common use cases.
+
+Alternatives:
+
+* If you have complex or uncommon requirements you can also and manage everything in your backend and associate with us
+  through `transaction_id` ditching tags-related APIs altogether.
+
+See also:
+* [Set Tags](#trading-transaction-set-tags)
+
+API Subject: `trading-transaction/set-tags`
+<details>
+  <summary>example payload</summary>
+
+~~~json
+{
+  "sub": "trading-transaction/list-by-tag",
+  "data": {
+    "tag": "NIDN:1234567851234",
+    "include_pending": true
+  }
+}
+~~~
+
+</details>
+
+<details>
+  <summary>example response</summary>
+
+~~~json
+{
+  "data": {
+    "transactions": [
+      {
+        "id": "TEST-TRANSACTION-001",
+        "initiated_at": "2023-11-20T11:35:36Z",
+        "trade_value": "42.0",
+        "tags": [],
+        "system_tags": [
+          "NIDN:1234567851234"
+        ],
+        "storage_used": 120099
+      },
+      {
+        "id": "TEST-TRANSACTION-002",
+        "initiated_at": "2023-11-20T11:38:57Z",
+        "trade_value": "60.0",
+        "tags": [],
+        "system_tags": [
+          "NIDN:1234567851234"
+        ],
+        "storage_used": 120219
+      },
+      {
+        "id": "TEST-TRANSACTION-003",
+        "initiated_at": "2023-11-20T11:41:30Z",
+        "trade_value": "120.0",
+        "tags": [],
+        "system_tags": [
+          "NIDN:1234567851234"
+        ],
+        "storage_used": 120068
+      }
+    ]
+  }
+}
+~~~
+
+</details>
+
+<details>
+  <summary>parameters</summary>
+
+ Name              | Type           | Required | Remarks                                                                                                                                                                                                                                                                                                                                       
+ -------------------|----------------|----------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ tag               | String         | true     | <N/A>                                                                                                                                                                                                                                                                                                                                         
+ include_documents | Enum\<String\> | false    | __"latest"__: include the latest document of the transactions; __"readied"__: include documents readied to be view or download; __"all"__: include all documents of the transaction; __Omit the parameter__ if you don't want to include data about the documents, which will save you some bandwidth and having slightly better performance. 
+ include_pending   | Boolean        | false    | Weather you want the transaction without generated document or not; __true:__ the transaction without generated document should be included; __default value:__ false
+</details>
+
