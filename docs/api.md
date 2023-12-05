@@ -70,7 +70,7 @@ the topic.
 The info in this document is more of a reference than a guide.
 
 <details>
-  <summary>Possible exception codes</summary>
+  <summary>exception codes</summary>
 
  Code                   | Description                                                                                                                                                 
  ------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -103,7 +103,6 @@ API Subject: `test/hello`
 ~~~
 
 </details>
-
 <details>
   <summary>example response</summary>
 
@@ -116,7 +115,6 @@ API Subject: `test/hello`
 ~~~
 
 </details>
-
 <details>
   <summary>parameters</summary>
 
@@ -181,7 +179,6 @@ API Subject: `simple-transaction/initiate-with-receipt`
 ~~~
 
 </details>
-
 <details>
   <summary>example response</summary>
 
@@ -194,7 +191,6 @@ API Subject: `simple-transaction/initiate-with-receipt`
 ~~~
 
 </details>
-
 <details>
   <summary>parameters</summary>
 
@@ -258,9 +254,8 @@ We are positive that we will have a good solution for you.
  tags                                            | Array\<String\>      | false       | The transaction can be tagged; similar to hash tags, you can filter your transactions by a tag;<br>__min size:__ 0;<br>__max size:__ 2                                                                                                                                                                                                  
 
 </details>
-
 <details>
-  <summary>Possible exception codes</summary>
+  <summary>exception codes</summary>
 
  Code                           | Description                                                                                                                                               
  --------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -294,6 +289,7 @@ APIs for a trading transaction in generals
 
 Show transaction info by `transaction_id`.
 
+API Subject: `trading-transaction/show`
 <details>
   <summary>example payload</summary>
 
@@ -308,7 +304,6 @@ Show transaction info by `transaction_id`.
 ~~~
 
 </details>
-
 <details>
   <summary>example response</summary>
 
@@ -338,8 +333,6 @@ Show transaction info by `transaction_id`.
 ~~~
 
 </details>
-
-
 <details>
   <summary>parameters</summary>
 
@@ -347,6 +340,14 @@ Show transaction info by `transaction_id`.
  -------------------|----------------|----------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
  transaction_id    | String         | true     | <N/A>                                                                                                                                                                                                                                                                                                                                         
  include_documents | Enum\<String\> | false    | __"latest"__: include the latest document of the transactions; __"readied"__: include documents readied to be view or download; __"all"__: include all documents of the transaction; __Omit the parameter__ if you don't want to include data about the documents, which will save you some bandwidth and having slightly better performance. 
+
+</details>
+<details>
+  <summary>exception codes</summary>
+
+ Code     | Description 
+ ----------|-------------
+ NotFound | <N/A>       
 
 </details>
 
@@ -360,6 +361,7 @@ Alternatives:
 * Don't use tags at all, customize and manage everything yourself and associate with us through `transaction_id`.
 
 See also:
+
 * [List by Tag](#trading-transaction-list-by-tag)
 
 API Subject: `trading-transaction/set-tags`
@@ -380,7 +382,6 @@ API Subject: `trading-transaction/set-tags`
 ~~~
 
 </details>
-
 <details>
   <summary>example response</summary>
 
@@ -393,7 +394,6 @@ API Subject: `trading-transaction/set-tags`
 ~~~
 
 </details>
-
 <details>
   <summary>parameters</summary>
 
@@ -401,6 +401,14 @@ API Subject: `trading-transaction/set-tags`
  ----------------|-----------------|----------|-------------------------------------------------------------
  transaction_id | String          | true     | <N/A>                                                       
  tags           | Array\<String\> | true     | __maximum array length:__ 2; __maximum string length:__ 255 
+
+</details>
+<details>
+  <summary>exception codes</summary>
+
+ Code     | Description 
+ ----------|-------------
+ NotFound | <N/A>       
 
 </details>
 
@@ -420,9 +428,10 @@ Alternatives:
   through `transaction_id` ditching tags-related APIs altogether.
 
 See also:
+
 * [Set Tags](#trading-transaction-set-tags)
 
-API Subject: `trading-transaction/set-tags`
+API Subject: `trading-transaction/list-by-tag`
 <details>
   <summary>example payload</summary>
 
@@ -437,7 +446,6 @@ API Subject: `trading-transaction/set-tags`
 ~~~
 
 </details>
-
 <details>
   <summary>example response</summary>
 
@@ -481,7 +489,6 @@ API Subject: `trading-transaction/set-tags`
 ~~~
 
 </details>
-
 <details>
   <summary>parameters</summary>
 
@@ -489,6 +496,315 @@ API Subject: `trading-transaction/set-tags`
  -------------------|----------------|----------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
  tag               | String         | true     | <N/A>                                                                                                                                                                                                                                                                                                                                         
  include_documents | Enum\<String\> | false    | __"latest"__: include the latest document of the transactions; __"readied"__: include documents readied to be view or download; __"all"__: include all documents of the transaction; __Omit the parameter__ if you don't want to include data about the documents, which will save you some bandwidth and having slightly better performance. 
- include_pending   | Boolean        | false    | Weather you want the transaction without generated document or not; __true:__ the transaction without generated document should be included; __default value:__ false
+ include_pending   | Boolean        | false    | Weather you want the transaction without generated document or not; __true:__ the transaction without generated document should be included; __default value:__ false                                                                                                                                                                         
+
 </details>
 
+## Trading Document API
+
+A trading transaction can contains one or more documents.  
+Trading Document APIs are for directly interacting with documents.
+
+### Trading Document: Show
+
+Show document info by `document_id`.
+
+API Subject: `trading-document/show`
+<details>
+  <summary>example payload</summary>
+
+~~~json
+{
+  "sub": "trading-document/show",
+  "data": {
+    "document_id": "TEST-TRANSACTION-001D1"
+  }
+}
+~~~
+
+</details>
+<details>
+  <summary>example response</summary>
+
+~~~json
+{
+  "data": {
+    "id": "TEST-TRANSACTION-001D1",
+    "transaction_id": "TEST-TRANSACTION-001",
+    "sequence": 1,
+    "ref": "1",
+    "ready": true,
+    "readied_at": "2023-11-21T09:26:02Z",
+    "xml_size": 12942,
+    "pdf_size": 107229
+  }
+}
+~~~
+
+</details>
+<details>
+  <summary>parameters</summary>
+
+ Name        | Type   | Required | Remarks 
+ -------------|--------|----------|---------
+ document_id | String | true     | <N/A>   
+
+</details>
+<details>
+  <summary>exception codes</summary>
+
+ Code     | Description 
+ ----------|-------------
+ NotFound | <N/A>       
+
+</details>
+
+### Trading Document: List by Transaction
+
+Show documents in a transaction.
+
+API Subject: `trading-document/list-by-transaction`
+<details>
+  <summary>example payload</summary>
+
+~~~json
+{
+  "sub": "trading-document/list-by-transaction",
+  "data": {
+    "transaction_id": "TEST-TRANSACTION-001"
+  }
+}
+~~~
+
+</details>
+<details>
+  <summary>example response</summary>
+
+~~~json
+{
+  "data": {
+    "documents": [
+      {
+        "id": "TEST-TRANSACTION-001D1",
+        "transaction_id": "TEST-TRANSACTION-001",
+        "sequence": 1,
+        "ref": "1",
+        "ready": true,
+        "readied_at": "2023-11-21T09:26:02Z",
+        "xml_size": 12942,
+        "pdf_size": 107229
+      }
+    ]
+  }
+}
+~~~
+
+</details>
+<details>
+  <summary>parameters</summary>
+
+ Name           | Type   | Required | Remarks 
+ ----------------|--------|----------|---------
+ transaction_id | String | true     | <N/A>   
+
+</details>
+
+### Trading Document: Download PDF
+
+Get temporary document URL that can be used to download the PDF file.  
+The download should be started right after receiving the response as the URL will expires in one minute.
+
+There is also an option to redirect to the target location instead of outputting a JSON response.
+
+See also:
+
+* [Download XML](#trading-document-download-xml)
+
+API Subject: `trading-document/download-pdf`
+<details>
+  <summary>example payload</summary>
+
+~~~json
+{
+  "sub": "trading-document/download-pdf",
+  "data": {
+    "document_id": "TEST-TRANSACTION-001D1",
+    "redirect": false
+  }
+}
+~~~
+
+</details>
+<details>
+  <summary>example response</summary>
+
+~~~json
+{
+  "data": {
+    "location": "https://temporary.example.com/thai-document/temporary-path-that-expires-in-1-minute"
+  }
+}
+~~~
+
+</details>
+<details>
+  <summary>parameters</summary>
+
+ Name        | Type    | Required | Remarks                                                                                             
+ -------------|---------|----------|-----------------------------------------------------------------------------------------------------
+ document_id | String  | true     | <N/A>                                                                                               
+ redirect    | Boolean | false    | If set to _true_, the server will redirect to the document location instead of returning JSON data. 
+
+</details>
+<details>
+  <summary>exception codes</summary>
+
+ Code     | Description                                                                       
+ ----------|-----------------------------------------------------------------------------------
+ NotReady | The system received the info of the document, but the generation is not done yet. 
+ NotFound | <N/A>                                                                             
+
+</details>
+
+### Trading Document: Download XML
+
+Get temporary document URL that can be used to download the XML file.  
+The download should be started right after receiving the response as the URL will expires in one minute.
+
+There is also an option to redirect to the target location instead of outputting a JSON response.
+
+See also:
+
+* [Download PDF](#trading-document-download-pdf)
+
+API Subject: `trading-document/download-xml`
+<details>
+  <summary>example payload</summary>
+
+~~~json
+{
+  "sub": "trading-document/download-xml",
+  "data": {
+    "document_id": "TEST-TRANSACTION-001D1",
+    "redirect": false
+  }
+}
+~~~
+
+</details>
+<details>
+  <summary>example response</summary>
+
+~~~json
+{
+  "data": {
+    "location": "https://temporary.example.com/thai-document/temporary-path-that-expires-in-1-minute"
+  }
+}
+~~~
+
+</details>
+<details>
+  <summary>parameters</summary>
+
+ Name        | Type    | Required | Remarks                                                                                             
+ -------------|---------|----------|-----------------------------------------------------------------------------------------------------
+ document_id | String  | true     | <N/A>                                                                                               
+ redirect    | Boolean | false    | If set to _true_, the server will redirect to the document location instead of returning JSON data. 
+
+</details>
+<details>
+  <summary>exception codes</summary>
+
+ Code     | Description                                                                       
+ ----------|-----------------------------------------------------------------------------------
+ NotReady | The system received the info of the document, but the generation is not done yet. 
+ NotFound | <N/A>                                                                             
+
+</details>
+
+### Trading Document: Stream Generated
+
+This API enables you to stream document information as soon as it is generated.  
+You can initiate the streaming process by [polling](https://en.wikipedia.org/wiki/Polling_(computer_science)) for
+updates;
+the API offers fault tolerance through indefinite stream replayability.
+
+Example use cases:
+
+* Sending the generated PDF to your customer via email.
+* Send push notifications to your app so your customer knows the document is ready to be downloaded.
+
+API Subject: `trading-document/stream-generated`
+<details>
+  <summary>example payload</summary>
+
+Starting the stream
+
+~~~json
+{
+  "sub": "trading-document/stream-generated",
+  "data": {
+    "from": "2024-08-20T18:10:42Z",
+    "limit": 200
+  }
+}
+~~~
+
+Continue the stream
+
+~~~json
+{
+  "sub": "trading-document/stream-generated",
+  "data": {
+    "continuation_token": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwidHlwIjoiSldUIiwia2lkIjoic2syMzIwODkifQ..PoifQQJIrboO0PqOa5F7aQ.VyptXgCKFsT7g9Xe0O5WB4ozwIgjI5dyGYpkhC_4XKuG45Hi9IpDV76N2wJJb5rqBDCjLVqoO6WqCOmQ3ZpZ9uFPlbA5LYUQ_zvLI34pZ05_Ei1AleWlbtzR1ZjcFPw4LoTmfR9XoR-KNbGbILuD2TwHuAJoSz7oKsuaR9rNuIqwygPDjc-WWQVMKw7MmAge.BuTlj8j1agfeeQ24ipLR-A",
+    "limit": 200
+  }
+}
+~~~
+
+</details>
+<details>
+  <summary>example response</summary>
+
+~~~json
+{
+  "data": {
+    "documents": [
+      {
+        "id": "TEST-TRANSACTION-001D1",
+        "transaction_id": "TEST-TRANSACTION-001",
+        "sequence": 1,
+        "ref": "1",
+        "ready": true,
+        "readied_at": "2023-11-21T09:26:02Z",
+        "xml_size": 12942,
+        "pdf_size": 107229
+      }
+    ],
+    "continuation_token": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwidHlwIjoiSldUIiwia2lkIjoic2syMzIwODkifQ..e8rJxWap87J8yeGJGy--DQ.zxygE9yFNMTyd2yvMEH3brC1mObljlyds8HX0SmKC7G3zT85JGB-hVGFv4tsq6boJsRuLaWVXC781HK4P1TkXh3ROqanE5ysqoLjQjcAXHsbJCXN1Y4MUn8AyvHiE9KiM7gwqOuOXN4-JNHP1pQt8fGA3C7d_dMO4G8hEPkzYYSbqnzTFoQQX4wI3rpEwgbm.KoIa7V39Jh0eEkWaDj_4hA"
+  }
+}
+~~~
+
+</details>
+<details>
+  <summary>parameters</summary>
+
+ Name               | Type    | Required    | Remarks                                                                                                            
+ --------------------|---------|-------------|--------------------------------------------------------------------------------------------------------------------
+ from               | String  | conditional | ISO-8601-formatted timestamp of the time you want to start streaming from.                                         
+ continuation_token | Boolean | conditional | The token returned from the previous call; the token contains streaming cursor to continue polling for next items. 
+ limit              | Integer | false       | The limit of returned items; The value can be from 1 to 1,000; __default value:__ 100                              
+
+Either `from` or `continuation_token` must be present in a call.
+</details>
+<details>
+  <summary>exception codes</summary>
+
+ Code                     | Description 
+ --------------------------|-------------
+ AmbiguousInstruction     | <N/A>       
+ InvalidContinuationToken | <N/A>       
+
+</details>
