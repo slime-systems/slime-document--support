@@ -2,15 +2,15 @@
 
 ## Introduction
 
-Slime Document helps you generate documents, store them securely, and manage them effectively.
-We offer the service through architectured and well-thought-out APIs.
+Slime Document assists in document generation, secure storage, and effective management.  
+Our service is delivered through well-architected and carefully designed APIs.
 
 ## Authentication & Getting Started
 
 ### Getting your hands dirty
 
-Download or clone this repository to your workstation; we are interested in specifically the hello example resided
-at [./examples/hello](../examples/hello).
+Begin by downloading or cloning this repository to your workstation.  
+Specifically, focus on the hello example located at [./examples/hello](../examples/hello).
 
 ~~~sh
 CLONE_TO=slime-document-examples; \
@@ -18,13 +18,13 @@ git clone https://github.com/slime-systems/slime-document--support.git $CLONE_TO
 cd "$CLONE_TO/examples/hello"
 ~~~
 
-It is assumed you have nodejs and npm installed on the machine. You can try running the example right away.
+Assuming you have Node.js and npm installed, proceed to run the example:
 
 ~~~sh
 npm install && npm start
 ~~~
 
-If you get something similar to
+If you encounter an error similar to the following JSON response:
 
 ~~~json
 {
@@ -34,12 +34,12 @@ If you get something similar to
 }
 ~~~
 
-, congrats. You are now successfully connected with the API.
+Congratulations, you are now successfully connected to the API.
 
-### Setting the API credentials
+### Setting API Credentials
 
-You may now examine the file at [./index.js](../examples/hello/index.js) on your machine and set the variables to the
-real API credentials from your projects.
+Inspect the file at [./index.js](../examples/hello/index.js) on your machine.  
+Set the variables to the actual API credentials from your projects.
 
 ~~~javascript
 const projectId = 123456;
@@ -47,24 +47,24 @@ const keyId = 'k1234';
 const secret = 'Bl9j0NXcWz70VMqxzk3Psk1ZAwQ6Pa5xlT9EHucd';
 ~~~
 
-#### Where to find the credentials?
+#### Where to Find the Credentials?
 
-After logging into the customer portal, go to the project dashboard;
-you can generate an API key from the "API Keys" section of the project dashboard.
+After logging into the customer portal,
+go to the project dashboard,
+and generate an API key from the "API Keys" section.
 
-Not having a project yet?  
+Don't have a project yet?  
 Create a project now by clicking on the "New Project" link.
 
 #### Testing the credentials
 
-You could rerun the hello example as many times as you want after editing [./index.js](../examples/hello/index.js) on
-your machine.
+You can editing [./index.js](../examples/hello/index.js) and rerun the hello example as many times as you want.
 
 ~~~sh
 npm start
 ~~~
 
-You will be greeted with the successful API response if done correctly, similar to:
+A successful API response will look like:
 
 ~~~json
 {
@@ -74,11 +74,11 @@ You will be greeted with the successful API response if done correctly, similar 
 }
 ~~~
 
-Congrats you are now successfully authenticated with the API.
+Congratulations, you are now authenticated with the API.
 
-## Understand the Authentication
+## Understand Authentication
 
-You have to understand what happened in the example in order to implement the authentication in your way with your language of choice.
+To implement authentication in your language of choice, it's essential to understand the example.  
 There is not much to be learned, actually.
 
 ### High-level overview
@@ -98,13 +98,14 @@ const response = await axios.post(apiEndpoint, {
 
 ### Payload encoding
 
-We use the industry standard, [JWT](https://jwt.io/), for API authentication
-because of [the support of communities of many programming languages](https://jwt.io/libraries).
+We use the industry-standard, [JWT](https://jwt.io/),
+for API authentication due to [support from communities of many programming languages](https://jwt.io/libraries).
 
-Encoding the command into a payload is as simple as picking your preferred JWT library and passing in the parameters.
+Encoding the command into a payload is as simple as choosing your preferred JWT library and passing in the parameters.
 
-In the example, we want to call the "hello" command passing name as the only parameter.
-By [reading the API document](./api.md#test-hello), you will find out that the "hello" command corresponds to the "test/hello" API subject;
+In the code example, we want to call the "hello" command passing the name as the only parameter.
+By [reading the API document](./api.md#test-hello), you will find out that the "hello" command corresponds to the "
+test/hello" API subject;
 the command accepts the `name` parameter.
 We then start constructing our payload with `sub` and `data` claims as shown.
 
@@ -119,10 +120,10 @@ new SignJWT({
 
 Please note that the `data` claim is a custom claim; it is not backed by the JWT standard.
 
-Then you have to set `iat` and `aud` claims for the JWT;
+Then, set `iat` and `aud` claims for the JWT;
 the technical details of what they are for are out of the scope of this document.
 Let's say the claims make the token more secure against advisories;
-if you are curious, google for the details later.
+if you are curious, Google for the details later.
 
 ~~~javascript
 jwtBuilder.setIssuedAt().setAudience('thai-document.slime.systems')
@@ -150,8 +151,7 @@ const jwt = jwtBuilder.sign(secret);
 Combining it all, you'll get what you see in [examples/hello/index.js](../examples/hello/index.js).
 
 ### Other languages
+For other languages, it follows the same principle but with different syntaxes.
 
-For other languages, it is just the same principle but different syntaxes.
-
-In fact, we don't use javascript as our primary backend language;
+In fact, we don't use JavaScript as our primary backend language;
 we made the example in the language because we hoped it would provide you with a quick way to try things out.

@@ -1,5 +1,5 @@
 # Hello API
 
-This is an example of API client implementation; the objective is to test authenticating with the API servers.
+Here's an example of an API client implementation designed for testing authentication with the API servers.
 
-You can read about [the getting started guide](../../docs/guides.md) by following the link.
+For more details, refer to [the getting started guide](../../docs/guides.md) by clicking the link.

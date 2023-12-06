@@ -2,9 +2,9 @@
 
 ## API Request Format
 
-The request payload consisted of an __API Subject__ and __parameters__ encapsulated as `sub` and `data` claims of a JSON
-Web Token, respectively.
-Resemble the following example:
+The request payload consists of an __API Subject__ and __parameters__
+encapsulated as `sub` and `data` claims of a JSON Web Token, respectively.
+It resembles the following example:
 
 ~~~json
 {
@@ -16,14 +16,13 @@ Resemble the following example:
 }
 ~~~
 
-Please refer to [the guide](./guides.md#understand-the-authentication) to understand the format of encoded request
-payloads.
+Refer to [the guide](./guides.md#understand-the-authentication) to understand the format of encoded request payloads.
 
 ## API Response Format
 
 ### Success Response
 
-The success response will return with the HTTP status code `200` with the JSON body resembling the following example.
+The success response returns with the HTTP status code `200` and the JSON body resembling the following example:
 
 ~~~json
 {
@@ -33,13 +32,12 @@ The success response will return with the HTTP status code `200` with the JSON b
 }
 ~~~
 
-Unless otherwise specified, the "data" value should be a JSON object.
-The actual value of data can vary between APIs.
+Unless otherwise specified, the `data` value should be a JSON object.
+The actual value of `data` can vary between APIs.
 
 ### Exception Response
 
-The exception response will return with the HTTP status code of `422` with the JSON body resembling the following
-example.
+The exception response returns with the HTTP status code of `422` and the JSON body resembling the following example:
 
 ~~~json
 {
@@ -53,39 +51,38 @@ example.
 }
 ~~~
 
-Unless otherwise specified, the value of the __"exception"__ should be a JSON object.
-The __"code"__ is an exception code that conveys the meaning to humans and machines alike;
-it is suitable for programming consumption.  
-We won't make a change to exception codes for aesthetic reasons.
+Unless otherwise specified, the value of the `exception` should be a JSON object.  
+The `code` is an exception code conveying meaning to humans and machines alike,
+suitable for programming consumption.  
+We won't change exception codes for aesthetic reasons.
 
-Sometimes, the exception will be accompanied by __"message"__ to help developers pinpoint the issue.
-And sometimes, it may accompanied by __"metadata"__ for programming consumptions.
+Sometimes, the exception will be accompanied by `message` to help developers pinpoint the issue.
+And sometimes, it may be accompanied by `metadata` for programming consumption.
 
 An exception code is always available in an exception response.
 
 ## API Authentication
 
-If you are looking for explanations, please refer to [the guide](./guides.md#understand-the-authentication) which covers
-the topic.
+If you are looking for explanations, refer to [the guide](./guides.md#understand-the-authentication) covering the topic.
 The info in this document is more of a reference than a guide.
 
 <details>
   <summary>exception codes</summary>
 
- Code                   | Description                                                                                                                                                 
- ------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------
- JWT::KeyNotFound       | The kid specified in the JWT header can't be found in the system. You should also check the API endpoint because each project has a different API endpoint. 
- JWT::IATDrift          | The `iat` claim in the JWT drifts beyond the acceptable period. The token may be stale, or the clock on the system used to generate the token is unusable.  
- JWT::InvalidSubject    | Unrecognized `API subject` specified.                                                                                                                       
- JWT::VerificationError | Mainly invalid signature; please check: the secret key and API endpoint.                                                                                    
- JWT::DecodeError       | General JWT decode issues; this exception code shoud accompanied with a useful message for debugging.                                                       
- JWT::SchemaViolation   | Some of the fields is not conformed to agreed format at the JWT level.                                                                                      
+ Code                   | Description                                                                                                                                           
+ ------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------
+ JWT::KeyNotFound       | The `kid` specified in the JWT header can't be found in the system. Also, check the API endpoint because each project has a different API endpoint.   
+ JWT::IATDrift          | The `iat` claim in the JWT drifts beyond the acceptable period. The token may be stale, or the system's clock used to generate the token is unusable. 
+ JWT::InvalidSubject    | Unrecognized `API subject` specified.                                                                                                                 
+ JWT::VerificationError | Mainly invalid signature; check the secret key and API endpoint.                                                                                      
+ JWT::DecodeError       | General JWT decode issues; this exception code should be accompanied by a useful message for debugging.                                               
+ JWT::SchemaViolation   | Some fields do not conform to the agreed format at the JWT level.                                                                                     
 
 </details>
 
 ## Test API
 
-APIs for testing your API connections and authentications
+APIs for testing your API connections and authentications.
 
 ### Test: Hello
 
@@ -126,7 +123,7 @@ API Subject: `test/hello`
 
 ## Simple Transaction API
 
-APIs for a trading transaction that only requires a single document once it is settled
+APIs for a trading transaction that only requires a single document once it is settled.
 
 ### Simple Transaction: Initiate with Receipt
 
@@ -194,16 +191,18 @@ API Subject: `simple-transaction/initiate-with-receipt`
 <details>
   <summary>parameters</summary>
 
-There is tons of information surrounding the standard, as it is intended to be used as a universal
-all-purposed representation of as many use cases as possible.
+There is tons of information surrounding the standard,
+as it is intended to be used as a universal all-purposed representation of as many use cases as possible.
 
-And we have to admit we really can't write about every rule mentioned in the standard here, or we are just writing
-another standard.
+And we have to admit we really can't write about every rule mentioned in the standard here,
+or we are just writing another standard.
+
 However, we perform reasonable validations on your inputs to ensure they can be represented in the format specified by
 the standard.
 
-__We would highly recommend__ starting with the example, and if you think our APIs don't support your use cases, you can
-always contact us in [the discussions section](https://github.com/slime-systems/slime-document--support/discussions).
+__We would highly recommend__ starting with the example, and if you think our APIs don't support your use cases,
+you can always contact us
+in [the discussions section](https://github.com/slime-systems/slime-document--support/discussions).
 We are positive that we will have a good solution for you.
 
  Name                                            | Type                 | Required    | Remarks                                                                                                                                                                                                                                                                                                                                 
@@ -245,7 +244,7 @@ We are positive that we will have a good solution for you.
  document.line_items[].unit_price                | Decimal as String    | true        | Do not sent float via JSON; it is a lossy format                                                                                                                                                                                                                                                                                        
  document.line_items[].quantity                  | Decimal as String    | true        | Do not sent float via JSON; it is a lossy format                                                                                                                                                                                                                                                                                        
  document.line_items[].unit_code                 | String               | false       | Unit code listed in UN/CEFACT Recommendation No. 20                                                                                                                                                                                                                                                                                     
- document.issued_at                              | String               | false       | ISO-8601-formatted timestamp of the time the trading transaction was settled; it can be in the past or present, but it wouldn't make much sense to be in the future.                                                                                                                                                                    
+ document.issued_at                              | String               | false       | ISO-8601-formatted timestamp of the time when the trading transaction was settled; it can be in the past or present, but it wouldn't make much sense to be in the future.                                                                                                                                                               
  document.theme_parameters                       | JSON Object          | conditional | Theme-specific parameters, you should not sent the parameters unless specified by the theme you are using.                                                                                                                                                                                                                              
  customization                                   | JSON Object          | true        | Customization for the trading trasaction; it is required because, at least, you must pick a theme (skin) for the documents.                                                                                                                                                                                                             
  customization.theme                             | JSON Object          | true        | <N/A>                                                                                                                                                                                                                                                                                                                                   
@@ -283,11 +282,11 @@ We are positive that we will have a good solution for you.
 
 ## Trading Transaction API
 
-APIs for a trading transaction in generals
+APIs for trading transactions in general.
 
 ### Trading Transaction: Show
 
-Show transaction info by `transaction_id`.
+Retrieve transaction information using the `transaction_id`.
 
 API Subject: `trading-transaction/show`
 <details>
@@ -336,10 +335,10 @@ API Subject: `trading-transaction/show`
 <details>
   <summary>parameters</summary>
 
- Name              | Type           | Required | Remarks                                                                                                                                                                                                                                                                                                                                         
- -------------------|----------------|----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
- transaction_id    | String         | true     | <N/A>                                                                                                                                                                                                                                                                                                                                           
- include_documents | Enum\<String\> | false    | __"latest"__: include the latest document of the transactions; __"readied"__: include documents ready to be viewed or downloaded; __"all"__: include all documents of the transaction; __Omit the parameter__ if you don't want to include data about the documents, which will save you some bandwidth and having slightly better performance. 
+ Name              | Type           | Required | Remarks                                                                                                                                                                                                                                                                                                                 
+ -------------------|----------------|----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ transaction_id    | String         | true     | <N/A>                                                                                                                                                                                                                                                                                                                   
+ include_documents | Enum\<String\> | false    | - __"latest"__: include the latest document of the transaction. - __"readied"__: include documents ready to be viewed or downloaded. - __"all"__: include all documents of the transaction. - __Omit the parameter__ if you don't want to include data about the documents, saving bandwidth and improving performance. 
 
 </details>
 <details>
@@ -353,11 +352,11 @@ API Subject: `trading-transaction/show`
 
 ### Trading Transaction: Set Tags
 
-Set tags on the transaction so it can be filtered.
+Assign tags to the transaction for filtering purposes.
 
 Alternatives:
 
-* Tags can be set on the transaction initiation, which should be preferred over setting it afterward.
+* Tags can be set during transaction initiation, which is preferred over setting them afterward.
 * Ditching tags: manage everything your way and associate with us through `transaction_id`.
 
 See also:
@@ -414,19 +413,20 @@ API Subject: `trading-transaction/set-tags`
 
 ### Trading Transaction: List By Tag
 
-List transactions by a tag.  
+Retrieve transactions based on a specified tag.  
 The tag used for filtering can be a user-supplied tag or a system tag.
 
 Limitation:
 
-* You can only filter using a single tag.
-* The response is limited to 1,000 transactions, which suffice for common use cases.
+* Only one tag per filtering.
+* The response is limited to 1,000 transactions, which suffice for common use cases. Otherwise, revise your tagging
+  strategy.
 
 Alternatives:
 
-* If you have complex or uncommon requirements,
-  you can also manage everything in your backend and associate with us through `transaction_id`,
-  ditching tags-related APIs altogether.
+* For complex or uncommon requirements,
+  manage everything in your backend and associate with us through `transaction_id`,
+  ignoring tags-related APIs.
 
 See also:
 
@@ -493,22 +493,22 @@ API Subject: `trading-transaction/list-by-tag`
 <details>
   <summary>parameters</summary>
 
- Name              | Type           | Required | Remarks                                                                                                                                                                                                                                                                                                                                         
- -------------------|----------------|----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
- tag               | String         | true     | <N/A>                                                                                                                                                                                                                                                                                                                                           
- include_documents | Enum\<String\> | false    | __"latest"__: include the latest document of the transactions; __"readied"__: include documents ready to be viewed or downloaded; __"all"__: include all documents of the transaction; __Omit the parameter__ if you don't want to include data about the documents, which will save you some bandwidth and having slightly better performance. 
- include_pending   | Boolean        | false    | Weather you want the transaction without generated document or not; __true:__ the transaction without generated document should be included; __default value:__ false                                                                                                                                                                           
+ Name              | Type           | Required | Remarks                                                                                                                                                                                                                                                                                                                  
+ -------------------|----------------|----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ tag               | String         | true     | <N/A>                                                                                                                                                                                                                                                                                                                    
+ include_documents | Enum\<String\> | false    | - __"latest"__: include the latest document of the transactions. - __"readied"__: include documents ready to be viewed or downloaded. - __"all"__: include all documents of the transaction. - __Omit the parameter__ if you don't want to include data about the documents, saving bandwidth and improving performance. 
+ include_pending   | Boolean        | false    | Weather you want transactions without generated documents or not; __true:__ Include transactions without generated documents.; __default value:__ false                                                                                                                                                                  
 
 </details>
 
 ## Trading Document API
 
-A trading transaction can contain one or more documents.  
-Trading Document APIs are for directly interacting with documents.
+A trading transaction may consist of one or more documents.  
+Trading Document APIs facilitate direct interaction with these documents.
 
 ### Trading Document: Show
 
-Show document info by `document_id`.
+Retrieve document information by specifying the `document_id`.
 
 API Subject: `trading-document/show`
 <details>
@@ -562,7 +562,7 @@ API Subject: `trading-document/show`
 
 ### Trading Document: List by Transaction
 
-Show documents in a transaction.
+Retrieve a list of documents in a specific transaction.
 
 API Subject: `trading-document/list-by-transaction`
 <details>
@@ -612,10 +612,10 @@ API Subject: `trading-document/list-by-transaction`
 
 ### Trading Document: Download PDF
 
-Get an ephemeral document URL that can be used to download the PDF file.  
-The download should be initiated right after receiving the response, as the URL will expire in one minute.
+Obtain an ephemeral document URL to download the PDF file.
 
-There is also an option to redirect to the target location instead of outputting a JSON response.
+Please ensure to initiate the download promptly, as the URL expires in one minute.  
+There is also an option to `redirect` to the target location instead of receiving a JSON response.
 
 See also:
 
@@ -669,10 +669,10 @@ API Subject: `trading-document/download-pdf`
 
 ### Trading Document: Download XML
 
-Get an ephemeral document URL that can be used to download the XML file.  
-The download should be initiated right after receiving the response, as the URL will expire in one minute.
+Obtain an ephemeral document URL to download the XML file.
 
-There is also an option to redirect to the target location instead of outputting a JSON response.
+Please ensure to initiate the download promptly, as the URL expires in one minute.  
+There is also an option to `redirect` to the target location instead of receiving a JSON response.
 
 See also:
 
@@ -726,15 +726,14 @@ API Subject: `trading-document/download-xml`
 
 ### Trading Document: Stream Generated
 
-This API enables you to stream document information as soon as it is generated.  
-You can initiate the streaming process by [polling](https://en.wikipedia.org/wiki/Polling_(computer_science)) for
-updates;
-the API offers fault tolerance through indefinite stream replayability.
+This API enables the streaming of document information upon generation.  
+To initiate the streaming process, [polling for updates](https://en.wikipedia.org/wiki/Polling_(computer_science)).
+The API offers fault tolerance through indefinite stream replayability.
 
 Example use cases:
 
 * Sending the generated PDF to your customer via email.
-* Send push notifications to your app so your customer knows the document is ready to be downloaded.
+* Sending push notifications to your app to alert your customer when the document is ready for download.
 
 API Subject: `trading-document/stream-generated`
 <details>
@@ -792,20 +791,20 @@ Continue the stream
 <details>
   <summary>parameters</summary>
 
- Name               | Type    | Required    | Remarks                                                                                                       
- --------------------|---------|-------------|---------------------------------------------------------------------------------------------------------------
- from               | String  | conditional | ISO-8601-formatted timestamp of the time you want to start streaming from.                                    
- continuation_token | Boolean | conditional | The token returned from the previous call contains a streaming cursor to continue polling for the next items. 
- limit              | Integer | false       | The limit of returned items; The value can be from 1 to 1,000; __default value:__ 100                         
+ Name               | Type    | Required    | Remarks                                                                                                           
+ --------------------|---------|-------------|-------------------------------------------------------------------------------------------------------------------
+ from               | String  | conditional | ISO-8601-formatted timestamp of the time you want to start streaming from.                                        
+ continuation_token | Boolean | conditional | The token returned from the previous call; it contains a streaming cursor to continue polling for the next items. 
+ limit              | Integer | false       | The limit of returned items; The value can be from 1 to 1,000; __default value:__ 100                             
 
 Either `from` or `continuation_token` must be present in a call.
 </details>
 <details>
   <summary>exception codes</summary>
 
- Code                     | Description                                                              
- --------------------------|--------------------------------------------------------------------------
- AmbiguousInstruction     | occur when you set both `from` and `continuation_token` in the same call 
- InvalidContinuationToken | <N/A>                                                                    
+ Code                     | Description                                                               
+ --------------------------|---------------------------------------------------------------------------
+ AmbiguousInstruction     | Occurs when you set both `from` and `continuation_token` in the same call 
+ InvalidContinuationToken | <N/A>                                                                     
 
 </details>
