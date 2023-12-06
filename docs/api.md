@@ -3,7 +3,7 @@
 ## API Request Format
 
 The request payload consisted of an __API Subject__ and __parameters__ encapsulated as `sub` and `data` claims of a JSON
-Web Token respectively.
+Web Token, respectively.
 Resemble the following example:
 
 ~~~json
@@ -130,7 +130,7 @@ APIs for a trading transaction that only requires a single document once it is s
 
 ### Simple Transaction: Initiate with Receipt
 
-Initiate a transaction and generate the receipt document correspond with the transaction.
+Initiate a transaction and generate the receipt document corresponding to the transaction.
 
 API Subject: `simple-transaction/initiate-with-receipt`
 <details>
@@ -194,10 +194,10 @@ API Subject: `simple-transaction/initiate-with-receipt`
 <details>
   <summary>parameters</summary>
 
-There are tons of information surrounding the standard; it is intended to be used as a universal
+There is tons of information surrounding the standard, as it is intended to be used as a universal
 all-purposed representation of as many use cases as possible.
 
-And we have to admit we really can't write about every rule mentioned in the standard here or we are just writing
+And we have to admit we really can't write about every rule mentioned in the standard here, or we are just writing
 another standard.
 However, we perform reasonable validations on your inputs to ensure they can be represented in the format specified by
 the standard.
@@ -251,7 +251,7 @@ We are positive that we will have a good solution for you.
  customization.theme                             | JSON Object          | true        | <N/A>                                                                                                                                                                                                                                                                                                                                   
  customization.theme.id                          | String               | true        | Theme ID                                                                                                                                                                                                                                                                                                                                
  customization.quirks                            | JSON Object          | false       | Options for customize beyond standards; AKA: non-standard customizations; should be left blank in generals but please contact us when you have a challenge you cannot overcome by standard means.                                                                                                                                       
- tags                                            | Array\<String\>      | false       | The transaction can be tagged; similar to hash tags, you can filter your transactions by a tag;<br>__min size:__ 0;<br>__max size:__ 2                                                                                                                                                                                                  
+ tags                                            | Array\<String\>      | false       | The transaction can be tagged; similar to hashtags, you can filter your transactions by a tag;<br>__min size:__ 0;<br>__max size:__ 2                                                                                                                                                                                                   
 
 </details>
 <details>
@@ -336,10 +336,10 @@ API Subject: `trading-transaction/show`
 <details>
   <summary>parameters</summary>
 
- Name              | Type           | Required | Remarks                                                                                                                                                                                                                                                                                                                                       
- -------------------|----------------|----------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
- transaction_id    | String         | true     | <N/A>                                                                                                                                                                                                                                                                                                                                         
- include_documents | Enum\<String\> | false    | __"latest"__: include the latest document of the transactions; __"readied"__: include documents readied to be view or download; __"all"__: include all documents of the transaction; __Omit the parameter__ if you don't want to include data about the documents, which will save you some bandwidth and having slightly better performance. 
+ Name              | Type           | Required | Remarks                                                                                                                                                                                                                                                                                                                                         
+ -------------------|----------------|----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ transaction_id    | String         | true     | <N/A>                                                                                                                                                                                                                                                                                                                                           
+ include_documents | Enum\<String\> | false    | __"latest"__: include the latest document of the transactions; __"readied"__: include documents ready to be viewed or downloaded; __"all"__: include all documents of the transaction; __Omit the parameter__ if you don't want to include data about the documents, which will save you some bandwidth and having slightly better performance. 
 
 </details>
 <details>
@@ -357,8 +357,8 @@ Set tags on the transaction so it can be filtered.
 
 Alternatives:
 
-* Tags can be set on the transaction initiation which should be preferred than setting it afterward.
-* Don't use tags at all, customize and manage everything yourself and associate with us through `transaction_id`.
+* Tags can be set on the transaction initiation, which should be preferred over setting it afterward.
+* Ditching tags: manage everything your way and associate with us through `transaction_id`.
 
 See also:
 
@@ -420,12 +420,13 @@ The tag used for filtering can be a user-supplied tag or a system tag.
 Limitation:
 
 * You can only filter using a single tag.
-* The response is limited to 1,000 transactions; which should suffice for common use cases.
+* The response is limited to 1,000 transactions, which suffice for common use cases.
 
 Alternatives:
 
-* If you have complex or uncommon requirements you can also and manage everything in your backend and associate with us
-  through `transaction_id` ditching tags-related APIs altogether.
+* If you have complex or uncommon requirements,
+  you can also manage everything in your backend and associate with us through `transaction_id`,
+  ditching tags-related APIs altogether.
 
 See also:
 
@@ -492,17 +493,17 @@ API Subject: `trading-transaction/list-by-tag`
 <details>
   <summary>parameters</summary>
 
- Name              | Type           | Required | Remarks                                                                                                                                                                                                                                                                                                                                       
- -------------------|----------------|----------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
- tag               | String         | true     | <N/A>                                                                                                                                                                                                                                                                                                                                         
- include_documents | Enum\<String\> | false    | __"latest"__: include the latest document of the transactions; __"readied"__: include documents readied to be view or download; __"all"__: include all documents of the transaction; __Omit the parameter__ if you don't want to include data about the documents, which will save you some bandwidth and having slightly better performance. 
- include_pending   | Boolean        | false    | Weather you want the transaction without generated document or not; __true:__ the transaction without generated document should be included; __default value:__ false                                                                                                                                                                         
+ Name              | Type           | Required | Remarks                                                                                                                                                                                                                                                                                                                                         
+ -------------------|----------------|----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ tag               | String         | true     | <N/A>                                                                                                                                                                                                                                                                                                                                           
+ include_documents | Enum\<String\> | false    | __"latest"__: include the latest document of the transactions; __"readied"__: include documents ready to be viewed or downloaded; __"all"__: include all documents of the transaction; __Omit the parameter__ if you don't want to include data about the documents, which will save you some bandwidth and having slightly better performance. 
+ include_pending   | Boolean        | false    | Weather you want the transaction without generated document or not; __true:__ the transaction without generated document should be included; __default value:__ false                                                                                                                                                                           
 
 </details>
 
 ## Trading Document API
 
-A trading transaction can contains one or more documents.  
+A trading transaction can contain one or more documents.  
 Trading Document APIs are for directly interacting with documents.
 
 ### Trading Document: Show
@@ -611,8 +612,8 @@ API Subject: `trading-document/list-by-transaction`
 
 ### Trading Document: Download PDF
 
-Get temporary document URL that can be used to download the PDF file.  
-The download should be started right after receiving the response as the URL will expires in one minute.
+Get an ephemeral document URL that can be used to download the PDF file.  
+The download should be initiated right after receiving the response, as the URL will expire in one minute.
 
 There is also an option to redirect to the target location instead of outputting a JSON response.
 
@@ -659,17 +660,17 @@ API Subject: `trading-document/download-pdf`
 <details>
   <summary>exception codes</summary>
 
- Code     | Description                                                                       
- ----------|-----------------------------------------------------------------------------------
- NotReady | The system received the info of the document, but the generation is not done yet. 
- NotFound | <N/A>                                                                             
+ Code     | Description                                                                         
+ ----------|-------------------------------------------------------------------------------------
+ NotReady | The system received the document's info, but the generation still needs to be done. 
+ NotFound | <N/A>                                                                               
 
 </details>
 
 ### Trading Document: Download XML
 
-Get temporary document URL that can be used to download the XML file.  
-The download should be started right after receiving the response as the URL will expires in one minute.
+Get an ephemeral document URL that can be used to download the XML file.  
+The download should be initiated right after receiving the response, as the URL will expire in one minute.
 
 There is also an option to redirect to the target location instead of outputting a JSON response.
 
@@ -716,10 +717,10 @@ API Subject: `trading-document/download-xml`
 <details>
   <summary>exception codes</summary>
 
- Code     | Description                                                                       
- ----------|-----------------------------------------------------------------------------------
- NotReady | The system received the info of the document, but the generation is not done yet. 
- NotFound | <N/A>                                                                             
+ Code     | Description                                                                         
+ ----------|-------------------------------------------------------------------------------------
+ NotReady | The system received the document's info, but the generation still needs to be done. 
+ NotFound | <N/A>                                                                               
 
 </details>
 
@@ -791,20 +792,20 @@ Continue the stream
 <details>
   <summary>parameters</summary>
 
- Name               | Type    | Required    | Remarks                                                                                                            
- --------------------|---------|-------------|--------------------------------------------------------------------------------------------------------------------
- from               | String  | conditional | ISO-8601-formatted timestamp of the time you want to start streaming from.                                         
- continuation_token | Boolean | conditional | The token returned from the previous call; the token contains streaming cursor to continue polling for next items. 
- limit              | Integer | false       | The limit of returned items; The value can be from 1 to 1,000; __default value:__ 100                              
+ Name               | Type    | Required    | Remarks                                                                                                       
+ --------------------|---------|-------------|---------------------------------------------------------------------------------------------------------------
+ from               | String  | conditional | ISO-8601-formatted timestamp of the time you want to start streaming from.                                    
+ continuation_token | Boolean | conditional | The token returned from the previous call contains a streaming cursor to continue polling for the next items. 
+ limit              | Integer | false       | The limit of returned items; The value can be from 1 to 1,000; __default value:__ 100                         
 
 Either `from` or `continuation_token` must be present in a call.
 </details>
 <details>
   <summary>exception codes</summary>
 
- Code                     | Description 
- --------------------------|-------------
- AmbiguousInstruction     | <N/A>       
- InvalidContinuationToken | <N/A>       
+ Code                     | Description                                                              
+ --------------------------|--------------------------------------------------------------------------
+ AmbiguousInstruction     | occur when you set both `from` and `continuation_token` in the same call 
+ InvalidContinuationToken | <N/A>                                                                    
 
 </details>
