@@ -1,5 +1,9 @@
 # API Document
 
+## Pro Tip
+
+- Check [How to read the API reference?](https://github.com/slime-systems/slime-document--support/discussions/2) before continue.
+
 ## API Request Format
 
 The request payload consists of an __API Subject__ and __parameters__
