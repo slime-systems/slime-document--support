@@ -155,3 +155,7 @@ For other languages, it follows the same principle but with different syntaxes.
 
 In fact, we don't use JavaScript as our primary backend language;
 we made the example in the language because we hoped it would provide you with a quick way to try things out.
+
+## What's next?
+
+Head to [the API references](./api.md), to implement the real functionalities aside Hello World.
