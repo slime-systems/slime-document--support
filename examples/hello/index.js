@@ -6,7 +6,7 @@ const projectId = 123456;
 const keyId = 'k1234';
 const secret = 'Bl9j0NXcWz70VMqxzk3Psk1ZAwQ6Pa5xlT9EHucd';
 
-const apiEndpoint = `https://api.thai-document.slime.systems/projects/${projectId}/api`;
+const apiEndpoint = `https://app.thai-document.slime.systems/projects/${projectId}/api`;
 const byteEncoder = new TextEncoder();
 const encodedSecret = byteEncoder.encode(secret);
 
