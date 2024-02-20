@@ -213,7 +213,7 @@ We are positive that we will have a good solution for you.
  -------------------------------------------------|----------------------|-------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
  transaction_id                                  | String               | true        | Client-generated transaction ID;<br>must be unique within the project;<br>__accepted regex pattern:__ `/^[-_\/a-zA-Z0-9]+$/`;<br>__max length:__ 30                                                                                                                                                                                     
  document                                        | JSON Object          | true        | The data of the receipt to be generated                                                                                                                                                                                                                                                                                                 
- document.ref                                    | String               | false       | Client-generated document reference;<br>must be unique within the transaction;<br>__default value:__ `<the sequence of the document in the transaction>`;<br> A pair of `transaction_id` and `ref` can be used to refer to a document in other API. If you don't set the `ref`, you have to rely on soon-to-be-generated `document_id`. 
+ document.ref                                    | String               | false       | Client-generated document reference;<br>must be unique within the transaction; this will be used as an [idempotency](https://en.wikipedia.org/wiki/Idempotence) key if you required one. Otherwise, you may leaves it blank.
  document.buyer_info                             | JSON Object          | true        | <N/A>                                                                                                                                                                                                                                                                                                                                   
  document.buyer_info.name                        | String               | true        | <N/A>                                                                                                                                                                                                                                                                                                                                   
  document.buyer_info.identity                    | JSON Object          | true        | Legal identity of the buyer                                                                                                                                                                                                                                                                                                             
@@ -321,11 +321,11 @@ API Subject: `trading-transaction/show`
       "NIDN:1234567851234"
     ],
     "storage_used": 120171,
+    "service_url": "https://app.thai-document.slime.systems/projects/1234/trading-document-interface/TEST-TRANSACTION-0001/0123456789abcdef0123456789abcdef",
     "documents": [
       {
         "id": "TEST-TRANSACTION-0001D1",
         "sequence": 1,
-        "ref": "1",
         "ready": true,
         "xml_size": 12942,
         "pdf_size": 107229
@@ -466,7 +466,8 @@ API Subject: `trading-transaction/list-by-tag`
         "system_tags": [
           "NIDN:1234567851234"
         ],
-        "storage_used": 120099
+        "storage_used": 120099,
+        "service_url": "https://app.thai-document.slime.systems/projects/1234/trading-document-interface/TEST-TRANSACTION-001/0123456789abcdef0123456789abcdef"
       },
       {
         "id": "TEST-TRANSACTION-002",
@@ -476,7 +477,8 @@ API Subject: `trading-transaction/list-by-tag`
         "system_tags": [
           "NIDN:1234567851234"
         ],
-        "storage_used": 120219
+        "storage_used": 120219,
+        "service_url": "https://app.thai-document.slime.systems/projects/1234/trading-document-interface/TEST-TRANSACTION-002/0123456789abcdef0123456789abcdef"
       },
       {
         "id": "TEST-TRANSACTION-003",
@@ -486,7 +488,8 @@ API Subject: `trading-transaction/list-by-tag`
         "system_tags": [
           "NIDN:1234567851234"
         ],
-        "storage_used": 120068
+        "storage_used": 120068,
+        "service_url": "https://app.thai-document.slime.systems/projects/1234/trading-document-interface/TEST-TRANSACTION-003/0123456789abcdef0123456789abcdef"
       }
     ]
   }
@@ -537,7 +540,6 @@ API Subject: `trading-document/show`
     "id": "TEST-TRANSACTION-001D1",
     "transaction_id": "TEST-TRANSACTION-001",
     "sequence": 1,
-    "ref": "1",
     "ready": true,
     "readied_at": "2023-11-21T09:26:02Z",
     "xml_size": 12942,
@@ -593,7 +595,6 @@ API Subject: `trading-document/list-by-transaction`
         "id": "TEST-TRANSACTION-001D1",
         "transaction_id": "TEST-TRANSACTION-001",
         "sequence": 1,
-        "ref": "1",
         "ready": true,
         "readied_at": "2023-11-21T09:26:02Z",
         "xml_size": 12942,
@@ -779,7 +780,6 @@ Continue the stream
         "id": "TEST-TRANSACTION-001D1",
         "transaction_id": "TEST-TRANSACTION-001",
         "sequence": 1,
-        "ref": "1",
         "ready": true,
         "readied_at": "2023-11-21T09:26:02Z",
         "xml_size": 12942,
