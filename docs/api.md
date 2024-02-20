@@ -2,7 +2,8 @@
 
 ## Pro Tip
 
-- Check [How to read the API reference?](https://github.com/slime-systems/slime-document--support/discussions/2) before continue.
+- Check [How to read the API reference?](https://github.com/slime-systems/slime-document--support/discussions/2) before
+  continue.
 
 ## API Request Format
 
@@ -73,14 +74,14 @@ The info in this document is more of a reference than a guide.
 <details>
   <summary>exception codes</summary>
 
- Code                   | Description                                                                                                                                           
- ------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------
- JWT::KeyNotFound       | The `kid` specified in the JWT header can't be found in the system. Also, check the API endpoint because each project has a different API endpoint.   
- JWT::IATDrift          | The `iat` claim in the JWT drifts beyond the acceptable period. The token may be stale, or the system's clock used to generate the token is unusable. 
- JWT::InvalidSubject    | Unrecognized `API subject` specified.                                                                                                                 
- JWT::VerificationError | Mainly invalid signature; check the secret key and API endpoint.                                                                                      
- JWT::DecodeError       | General JWT decode issues; this exception code should be accompanied by a useful message for debugging.                                               
- JWT::SchemaViolation   | Some fields do not conform to the agreed format at the JWT level.                                                                                     
+| Code                   | Description                                                                                                                                           |
+|------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|
+| JWT::KeyNotFound       | The `kid` specified in the JWT header can't be found in the system. Also, check the API endpoint because each project has a different API endpoint.   |
+| JWT::IATDrift          | The `iat` claim in the JWT drifts beyond the acceptable period. The token may be stale, or the system's clock used to generate the token is unusable. |
+| JWT::InvalidSubject    | Unrecognized `API subject` specified.                                                                                                                 |
+| JWT::VerificationError | Mainly invalid signature; check the secret key and API endpoint.                                                                                      |
+| JWT::DecodeError       | General JWT decode issues; this exception code should be accompanied by a useful message for debugging.                                               |
+| JWT::SchemaViolation   | Some fields do not conform to the agreed format at the JWT level.                                                                                     |
 
 </details>
 
@@ -119,15 +120,133 @@ API Subject: `test/hello`
 <details>
   <summary>parameters</summary>
 
- Name | Type   | Required | Remarks 
- ------|--------|----------|---------
- name | String | true     | <N/A>   
+| Name | Type   | Required | Remarks |
+|------|--------|----------|---------|
+| name | String | true     | <N/A>   |
 
 </details>
 
 ## Simple Transaction API
 
-APIs for a trading transaction that only requires a single document once it is settled.
+APIs for a trading transaction that requires a document once it is settled.
+
+### Simple Transaction: Initiate with Abbreviated Tax Invoice
+
+Initiate a transaction and generate an abbreviated tax invoice.
+
+API Subject: `simple-transaction/initiate-with-abbreviated-tax-invoice`
+<details>
+  <summary>example payload</summary>
+
+~~~json
+{
+  "sub": "simple-transaction/initiate-with-abbreviated-tax-invoice",
+  "data": {
+    "transaction_id": "TEST-ES-0001",
+    "document": {
+      "issued_at": "2023-11-30T17:00:00Z",
+      "line_items": [
+        {
+          "name": "ข้าวโพดปิ้ง",
+          "unit_price": "15",
+          "quantity": "8",
+          "vatable": true
+        },
+        {
+          "name": "ไข่ต้ม",
+          "unit_price": "6",
+          "quantity": "10",
+          "vatable": true
+        },
+        {
+          "name": "ข้าวสาร",
+          "unit_price": "220",
+          "quantity": "1",
+          "vatable": false
+        }
+      ]
+    },
+    "customization": {
+      "theme": {
+        "id": "retail-hatsu",
+        "color": "#cd0c2b"
+      },
+      "vat_included": false,
+      "vat_rate": "0.07"
+    }
+  }
+}
+~~~
+
+</details>
+<details>
+  <summary>example response</summary>
+
+~~~json
+{
+  "data": {
+    "success": true
+  }
+}
+~~~
+
+</details>
+
+<details>
+  <summary>parameters</summary>
+
+There is tons of information surrounding the standard,
+as it is intended to be used as a universal all-purposed representation of as many use cases as possible.
+
+And we have to admit we really can't write about every rule mentioned in the standard here,
+or we are just writing another standard.
+
+However, we perform reasonable validations on your inputs to ensure they can be represented in the format specified by
+the standard.
+
+__We would highly recommend__ starting with the example, and if you think our APIs don't support your use cases,
+you can always contact us
+in [the discussions section](https://github.com/slime-systems/slime-document--support/discussions).
+We are positive that we will have a good solution for you.
+
+| Name                              | Type                 | Required    | Remarks                                                                                                                                                                                                                      |
+|-----------------------------------|----------------------|-------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| transaction_id                    | String               | true        | Client-generated transaction ID;<br>must be unique within the project;<br>__accepted regex pattern:__ `/^[-_\/a-zA-Z0-9]+$/`;<br>__max length:__ 30                                                                          |
+| document                          | JSON Object          | true        | The data of the receipt to be generated                                                                                                                                                                                      |
+| document.ref                      | String               | false       | Client-generated document reference;<br>must be unique within the transaction; this will be used as an [idempotency](https://en.wikipedia.org/wiki/Idempotence) key if you required one. Otherwise, you may leaves it blank. |
+| document.line_items               | Array\<JSON Object\> | true        | List of items involved in the trading transactions;<br>__min size:__ 1;<br>__max size:__ 1,000                                                                                                                               |
+| document.line_items[].product_id  | String               | false       | <N/A>                                                                                                                                                                                                                        |
+| document.line_items[].name        | String               | true        | <N/A>                                                                                                                                                                                                                        |
+| document.line_items[].description | String               | false       | <N/A>                                                                                                                                                                                                                        |
+| document.line_items[].unit_price  | Decimal as String    | true        | Do not sent float via JSON; it is a lossy format                                                                                                                                                                             |
+| document.line_items[].quantity    | Decimal as String    | true        | Do not sent float via JSON; it is a lossy format                                                                                                                                                                             |
+| document.line_items[].unit_code   | String               | false       | Unit code listed in UN/CEFACT Recommendation No. 20                                                                                                                                                                          |
+| document.issued_at                | String               | false       | ISO-8601-formatted timestamp of the time when the trading transaction was settled; it can be in the past or present, but it wouldn't make much sense to be in the future.                                                    |
+| document.theme_parameters         | JSON Object          | conditional | Theme-specific parameters, you should not sent the parameters unless specified by the theme you are using.                                                                                                                   |
+| customization                     | JSON Object          | true        | Customization for the trading trasaction; it is required because, at least, you must pick a theme (skin) for the documents.                                                                                                  |
+| customization.theme               | JSON Object          | true        | <N/A>                                                                                                                                                                                                                        |
+| customization.theme.id            | String               | true        | Theme ID                                                                                                                                                                                                                     |
+| customization.vat_included        | Boolean              | true        | <N/A>                                                                                                                                                                                                                        |
+| customization.vat_rate            | Decimal as String    | true        | For 7% VAT, please inputs "0.07"                                                                                                                                                                                             |
+| tags                              | Array\<String\>      | false       | The transaction can be tagged; similar to hashtags, you can filter your transactions by a tag;<br>__min size:__ 0;<br>__max size:__ 2                                                                                        |
+
+</details>
+<details>
+  <summary>exception codes</summary>
+
+| Code                           | Description                                                                      |
+|--------------------------------|----------------------------------------------------------------------------------|
+| SchemaViolation                | <N/A>                                                                            |
+| Certificate::NotReady          | <N/A>                                                                            |
+| Fund::InsufficientBalance      | Please top up your account                                                       |
+| Trade::Initiated               | The trading transaction with the supplied `transaction_id` already existed.      |
+| Seller::NotConfigured          | Seller info not ready                                                            |
+| LineItems::InvalidUnitCode     | <N/A>                                                                            |
+| Theme::NotFound                | <N/A>                                                                            |
+| Theme::UnsupportedDocumentType | The theme selected does not support this document type (abbreviated tax invoice) |
+| Theme::UnsupportedLanguage     | The theme selected does not support the language you configured                  |
+
+</details>
 
 ### Simple Transaction: Initiate with Receipt
 
@@ -209,78 +328,77 @@ you can always contact us
 in [the discussions section](https://github.com/slime-systems/slime-document--support/discussions).
 We are positive that we will have a good solution for you.
 
- Name                                            | Type                 | Required    | Remarks                                                                                                                                                                                                                                                                                                                                 
- -------------------------------------------------|----------------------|-------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
- transaction_id                                  | String               | true        | Client-generated transaction ID;<br>must be unique within the project;<br>__accepted regex pattern:__ `/^[-_\/a-zA-Z0-9]+$/`;<br>__max length:__ 30                                                                                                                                                                                     
- document                                        | JSON Object          | true        | The data of the receipt to be generated                                                                                                                                                                                                                                                                                                 
- document.ref                                    | String               | false       | Client-generated document reference;<br>must be unique within the transaction; this will be used as an [idempotency](https://en.wikipedia.org/wiki/Idempotence) key if you required one. Otherwise, you may leaves it blank.
- document.buyer_info                             | JSON Object          | true        | <N/A>                                                                                                                                                                                                                                                                                                                                   
- document.buyer_info.name                        | String               | true        | <N/A>                                                                                                                                                                                                                                                                                                                                   
- document.buyer_info.identity                    | JSON Object          | true        | Legal identity of the buyer                                                                                                                                                                                                                                                                                                             
- document.buyer_info.identity.type               | String               | true        | One of: __TXID__ (Tax ID, for juristic persons), __NIDN__ (National ID Number, for Thai Citizen), __CCPT__ (Passport Number) __OTHR__ (Other, custom ID)                                                                                                                                                                                
- document.buyer_info.identity.tax_id             | String               | conditional | __accepted regex pattern:__ `/^\d{13}$/`                                                                                                                                                                                                                                                                                                
- document.buyer_info.identity.branch_id          | String               | false       | __accepted regex pattern:__ `/^\d{5}$/`                                                                                                                                                                                                                                                                                                 
- document.buyer_info.identity.national_id_number | String               | conditional | __accepted regex pattern:__ `/^\d{13}$/`                                                                                                                                                                                                                                                                                                
- document.buyer_info.identity.passport_number    | String               | conditional | __accepted regex pattern:__ `/^[a-zA-Z0-9]+$/`                                                                                                                                                                                                                                                                                          
- document.buyer_info.identity.other_id           | String               | conditional | <N/A>                                                                                                                                                                                                                                                                                                                                   
- document.buyer_info.email                       | String               | false       | <N/A>                                                                                                                                                                                                                                                                                                                                   
- document.buyer_info.phone_number                | String               | false       | <N/A>                                                                                                                                                                                                                                                                                                                                   
- document.buyer_info.address                     | JSON Object          | conditional | <N/A>                                                                                                                                                                                                                                                                                                                                   
- document.buyer_info.address.country_id          | String               | true        | ISO 3166-1 alpha-2 country code                                                                                                                                                                                                                                                                                                         
- document.buyer_info.address.post_code           | String               | true        | <N/A>                                                                                                                                                                                                                                                                                                                                   
- document.buyer_info.address.changwat_id         | String               | conditional | Thailand's Changwat code                                                                                                                                                                                                                                                                                                                
- document.buyer_info.address.amphoe_id           | String               | conditional | Thailand's Amphoe code                                                                                                                                                                                                                                                                                                                  
- document.buyer_info.address.tambon_id           | String               | conditional | Thailand's Tambon code                                                                                                                                                                                                                                                                                                                  
- document.buyer_info.address.moo                 | String               | false       | <N/A>                                                                                                                                                                                                                                                                                                                                   
- document.buyer_info.address.moo_barn            | String               | false       | <N/A>                                                                                                                                                                                                                                                                                                                                   
- document.buyer_info.address.street_name         | String               | false       | <N/A>                                                                                                                                                                                                                                                                                                                                   
- document.buyer_info.address.soi                 | String               | false       | <N/A>                                                                                                                                                                                                                                                                                                                                   
- document.buyer_info.address.building_name       | String               | false       | <N/A>                                                                                                                                                                                                                                                                                                                                   
- document.buyer_info.address.building_number     | String               | false       | <N/A>                                                                                                                                                                                                                                                                                                                                   
- document.buyer_info.address.floor               | String               | false       | <N/A>                                                                                                                                                                                                                                                                                                                                   
- document.buyer_info.address.room                | String               | false       | <N/A>                                                                                                                                                                                                                                                                                                                                   
- document.buyer_info.address.line1               | String               | conditional | <N/A>                                                                                                                                                                                                                                                                                                                                   
- document.buyer_info.address.line2               | String               | false       | <N/A>                                                                                                                                                                                                                                                                                                                                   
- document.line_items                             | Array\<JSON Object\> | true        | List of items involved in the trading transactions;<br>__min size:__ 1;<br>__max size:__ 1,000                                                                                                                                                                                                                                          
- document.line_items[].product_id                | String               | false       | <N/A>                                                                                                                                                                                                                                                                                                                                   
- document.line_items[].name                      | String               | true        | <N/A>                                                                                                                                                                                                                                                                                                                                   
- document.line_items[].description               | String               | false       | <N/A>                                                                                                                                                                                                                                                                                                                                   
- document.line_items[].unit_price                | Decimal as String    | true        | Do not sent float via JSON; it is a lossy format                                                                                                                                                                                                                                                                                        
- document.line_items[].quantity                  | Decimal as String    | true        | Do not sent float via JSON; it is a lossy format                                                                                                                                                                                                                                                                                        
- document.line_items[].unit_code                 | String               | false       | Unit code listed in UN/CEFACT Recommendation No. 20                                                                                                                                                                                                                                                                                     
- document.issued_at                              | String               | false       | ISO-8601-formatted timestamp of the time when the trading transaction was settled; it can be in the past or present, but it wouldn't make much sense to be in the future.                                                                                                                                                               
- document.theme_parameters                       | JSON Object          | conditional | Theme-specific parameters, you should not sent the parameters unless specified by the theme you are using.                                                                                                                                                                                                                              
- customization                                   | JSON Object          | true        | Customization for the trading trasaction; it is required because, at least, you must pick a theme (skin) for the documents.                                                                                                                                                                                                             
- customization.theme                             | JSON Object          | true        | <N/A>                                                                                                                                                                                                                                                                                                                                   
- customization.theme.id                          | String               | true        | Theme ID                                                                                                                                                                                                                                                                                                                                
- customization.quirks                            | JSON Object          | false       | Options for customize beyond standards; AKA: non-standard customizations; should be left blank in generals but please contact us when you have a challenge you cannot overcome by standard means.                                                                                                                                       
- tags                                            | Array\<String\>      | false       | The transaction can be tagged; similar to hashtags, you can filter your transactions by a tag;<br>__min size:__ 0;<br>__max size:__ 2                                                                                                                                                                                                   
+| Name                                            | Type                 | Required    | Remarks                                                                                                                                                                                                                      |
+|-------------------------------------------------|----------------------|-------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| transaction_id                                  | String               | true        | Client-generated transaction ID;<br>must be unique within the project;<br>__accepted regex pattern:__ `/^[-_\/a-zA-Z0-9]+$/`;<br>__max length:__ 30                                                                          |
+| document                                        | JSON Object          | true        | The data of the receipt to be generated                                                                                                                                                                                      |
+| document.ref                                    | String               | false       | Client-generated document reference;<br>must be unique within the transaction; this will be used as an [idempotency](https://en.wikipedia.org/wiki/Idempotence) key if you required one. Otherwise, you may leaves it blank. |
+| document.buyer_info                             | JSON Object          | true        | <N/A>                                                                                                                                                                                                                        |
+| document.buyer_info.name                        | String               | true        | <N/A>                                                                                                                                                                                                                        |
+| document.buyer_info.identity                    | JSON Object          | true        | Legal identity of the buyer                                                                                                                                                                                                  |
+| document.buyer_info.identity.type               | String               | true        | One of: __TXID__ (Tax ID, for juristic persons), __NIDN__ (National ID Number, for Thai Citizen), __CCPT__ (Passport Number) __OTHR__ (Other, custom ID)                                                                     |
+| document.buyer_info.identity.tax_id             | String               | conditional | __accepted regex pattern:__ `/^\d{13}$/`                                                                                                                                                                                     |
+| document.buyer_info.identity.branch_id          | String               | false       | __accepted regex pattern:__ `/^\d{5}$/`                                                                                                                                                                                      |
+| document.buyer_info.identity.national_id_number | String               | conditional | __accepted regex pattern:__ `/^\d{13}$/`                                                                                                                                                                                     |
+| document.buyer_info.identity.passport_number    | String               | conditional | __accepted regex pattern:__ `/^[a-zA-Z0-9]+$/`                                                                                                                                                                               |
+| document.buyer_info.identity.other_id           | String               | conditional | <N/A>                                                                                                                                                                                                                        |
+| document.buyer_info.email                       | String               | false       | <N/A>                                                                                                                                                                                                                        |
+| document.buyer_info.phone_number                | String               | false       | <N/A>                                                                                                                                                                                                                        |
+| document.buyer_info.address                     | JSON Object          | conditional | <N/A>                                                                                                                                                                                                                        |
+| document.buyer_info.address.country_id          | String               | true        | ISO 3166-1 alpha-2 country code                                                                                                                                                                                              |
+| document.buyer_info.address.post_code           | String               | true        | <N/A>                                                                                                                                                                                                                        |
+| document.buyer_info.address.changwat_id         | String               | conditional | Thailand's Changwat code                                                                                                                                                                                                     |
+| document.buyer_info.address.amphoe_id           | String               | conditional | Thailand's Amphoe code                                                                                                                                                                                                       |
+| document.buyer_info.address.tambon_id           | String               | conditional | Thailand's Tambon code                                                                                                                                                                                                       |
+| document.buyer_info.address.moo                 | String               | false       | <N/A>                                                                                                                                                                                                                        |
+| document.buyer_info.address.moo_barn            | String               | false       | <N/A>                                                                                                                                                                                                                        |
+| document.buyer_info.address.street_name         | String               | false       | <N/A>                                                                                                                                                                                                                        |
+| document.buyer_info.address.soi                 | String               | false       | <N/A>                                                                                                                                                                                                                        |
+| document.buyer_info.address.building_name       | String               | false       | <N/A>                                                                                                                                                                                                                        |
+| document.buyer_info.address.building_number     | String               | false       | <N/A>                                                                                                                                                                                                                        |
+| document.buyer_info.address.floor               | String               | false       | <N/A>                                                                                                                                                                                                                        |
+| document.buyer_info.address.room                | String               | false       | <N/A>                                                                                                                                                                                                                        |
+| document.buyer_info.address.line1               | String               | conditional | <N/A>                                                                                                                                                                                                                        |
+| document.buyer_info.address.line2               | String               | false       | <N/A>                                                                                                                                                                                                                        |
+| document.line_items                             | Array\<JSON Object\> | true        | List of items involved in the trading transactions;<br>__min size:__ 1;<br>__max size:__ 1,000                                                                                                                               |
+| document.line_items[].product_id                | String               | false       | <N/A>                                                                                                                                                                                                                        |
+| document.line_items[].name                      | String               | true        | <N/A>                                                                                                                                                                                                                        |
+| document.line_items[].description               | String               | false       | <N/A>                                                                                                                                                                                                                        |
+| document.line_items[].unit_price                | Decimal as String    | true        | Do not sent float via JSON; it is a lossy format                                                                                                                                                                             |
+| document.line_items[].quantity                  | Decimal as String    | true        | Do not sent float via JSON; it is a lossy format                                                                                                                                                                             |
+| document.line_items[].unit_code                 | String               | false       | Unit code listed in UN/CEFACT Recommendation No. 20                                                                                                                                                                          |
+| document.issued_at                              | String               | false       | ISO-8601-formatted timestamp of the time when the trading transaction was settled; it can be in the past or present, but it wouldn't make much sense to be in the future.                                                    |
+| document.theme_parameters                       | JSON Object          | conditional | Theme-specific parameters, you should not sent the parameters unless specified by the theme you are using.                                                                                                                   |
+| customization                                   | JSON Object          | true        | Customization for the trading trasaction; it is required because, at least, you must pick a theme (skin) for the documents.                                                                                                  |
+| customization.theme                             | JSON Object          | true        | <N/A>                                                                                                                                                                                                                        |
+| customization.theme.id                          | String               | true        | Theme ID                                                                                                                                                                                                                     |
+| customization.quirks                            | JSON Object          | false       | Options for customize beyond standards; AKA: non-standard customizations; should be left blank in generals but please contact us when you have a challenge you cannot overcome by standard means.                            |
+| tags                                            | Array\<String\>      | false       | The transaction can be tagged; similar to hashtags, you can filter your transactions by a tag;<br>__min size:__ 0;<br>__max size:__ 2                                                                                        |
 
 </details>
 <details>
   <summary>exception codes</summary>
 
- Code                           | Description                                                                                                                                               
- --------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------
- SchemaViolation                | <N/A>                                                                                                                                                     
- Certificate::NotReady          | <N/A>                                                                                                                                                     
- Fund::InsufficientBalance      | Please top up your account                                                                                                                                
- Trade::Initiated               | The trading transaction with the supplied `transaction_id` already existed.                                                                               
- Trade::DocumentExists          | The document with `transaction_id` and `ref` pair already existed. This exception let you add idempotency to your document generation by given its `ref`. 
- Seller::NotConfigured          | Seller info not ready                                                                                                                                     
- Buyer::InvalidEmail            | <N/A>                                                                                                                                                     
- Buyer::InvalidPhoneNumber      | <N/A>                                                                                                                                                     
- Buyer::InvalidCountry          | <N/A>                                                                                                                                                     
- Buyer::InvalidPostcode         | <N/A>                                                                                                                                                     
- Buyer::InvalidChangwat         | <N/A>                                                                                                                                                     
- Buyer::InvalidAmphoe           | <N/A>                                                                                                                                                     
- Buyer::InvalidTambon           | <N/A>                                                                                                                                                     
- Buyer::AmphoeNotInChangwat     | <N/A>                                                                                                                                                     
- Buyer::TambonNotInAmphoe       | <N/A>                                                                                                                                                     
- LineItems::InvalidUnitCode     | <N/A>                                                                                                                                                     
- Theme::NotFound                | <N/A>                                                                                                                                                     
- Theme::UnsupportedDocumentType | <N/A>                                                                                                                                                     
- Theme::UnsupportedLanguage     | <N/A>                                                                                                                                                     
+| Code                           | Description                                                                      |
+|--------------------------------|----------------------------------------------------------------------------------|
+| SchemaViolation                | <N/A>                                                                            |
+| Certificate::NotReady          | <N/A>                                                                            |
+| Fund::InsufficientBalance      | Please top up your account                                                       |
+| Trade::Initiated               | The trading transaction with the supplied `transaction_id` already existed.      |
+| Seller::NotConfigured          | Seller info not ready                                                            |
+| Buyer::InvalidEmail            | <N/A>                                                                            |
+| Buyer::InvalidPhoneNumber      | <N/A>                                                                            |
+| Buyer::InvalidCountry          | <N/A>                                                                            |
+| Buyer::InvalidPostcode         | <N/A>                                                                            |
+| Buyer::InvalidChangwat         | <N/A>                                                                            |
+| Buyer::InvalidAmphoe           | <N/A>                                                                            |
+| Buyer::InvalidTambon           | <N/A>                                                                            |
+| Buyer::AmphoeNotInChangwat     | <N/A>                                                                            |
+| Buyer::TambonNotInAmphoe       | <N/A>                                                                            |
+| LineItems::InvalidUnitCode     | <N/A>                                                                            |
+| Theme::NotFound                | <N/A>                                                                            |
+| Theme::UnsupportedDocumentType | The theme selected does not support this document type (abbreviated tax invoice) |
+| Theme::UnsupportedLanguage     | The theme selected does not support the language you configured                  |
 
 </details>
 
